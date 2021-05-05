@@ -44,6 +44,17 @@ app.get('/post', (req, res) => {
     res.render('post')
 })
 
+app.get('/posts/:id', async (req, res) => {
+    let id = req.params.id
+    let selectPost = await Post.findById(id, (err, data) => {
+        if (err) throw err
+        return data
+    })
+    res.render('post', {
+        selectPost
+    })
+})
+
 // ROUTE's POST
 app.post('/post', async (req, res) => {
     await Post.create(req.body)
