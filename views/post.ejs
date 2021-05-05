@@ -29,6 +29,15 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <p><%= selectPost.detail %></p>
+          <div class="float-right mt-3 p-2">
+            <a href="/post/edit/<%= selectPost._id %>">
+              <button class="btn btn-success mx-3">Update</button>
+            </a>
+            <a href="/posts/<%= selectPost._id %>?_method=DELETE" onClick="return confirm('ARE YOU SURE?')">
+              <button class="btn btn-danger">Delete</button>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </article>

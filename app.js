@@ -1,12 +1,16 @@
 const express = require('express')
 const ejs = require('ejs')
 const mongoose = require('mongoose')
-const Photo = require('./models/Post')
-const Post = require('./models/Post')
+const methodOverride = require('method-override')
+const postController = require('./controllers/postControllers')
+const pageController = require('./controllers/pageController')
+
 const app = express()
 
 mongoose.connect('mongodb://localhost/cleanblog-test-db', {
-    useNewUrlParser: true, useUnifiedTopology: true
+    useNewUrlParser: true, 
+    useUnifiedTopology: true,
+    useFindAndModify : false
 })
 
 
@@ -21,45 +25,24 @@ app.use(express.static('public'))
 app.use(express.urlencoded({extended : true}))
 app.use(express.json())
 
-// ROUTE's GET
-app.get('/', async (req, res) => {
-    const posts = await Post.find({}, (err, data) => {
-        if (err) throw err
-        return data
-    })
-    res.render('index', {
-        posts
-    })
-})
+// DELETE AND UPDATE
+app.use(methodOverride('_method', {
+    methods : ['POST', 'GET']
+}))
 
-app.get('/about', (req, res) => {
-    res.render('about')
-})
+// ROUTE's POST 
+app.get('/', postController.getAllPosts)
+app.put('/posts/:id', postController.updatePost)
+app.post('/post', postController.createPost)
+app.delete('/posts/:id', postController.deletePost)
+app.get('/posts/:id', postController.getPost)
+// ROUTE's GET PAGE
+app.get('/about', pageController.getAbout)
+app.get('/add-post', pageController.getAddPost)
+app.get('/post/edit/:id', pageController.getEditPost)
 
-app.get('/add-post', (req, res) => {
-    res.render('add_post')
-})
 
-app.get('/post', (req, res) => {
-    res.render('post')
-})
 
-app.get('/posts/:id', async (req, res) => {
-    let id = req.params.id
-    let selectPost = await Post.findById(id, (err, data) => {
-        if (err) throw err
-        return data
-    })
-    res.render('post', {
-        selectPost
-    })
-})
-
-// ROUTE's POST
-app.post('/post', async (req, res) => {
-    await Post.create(req.body)
-    res.redirect('/')
-})
 
 const port = 5000;
 

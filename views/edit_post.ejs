@@ -12,7 +12,7 @@
       <div class="row">
         <div class="col-lg-8 col-md-10 mx-auto">
           <div class="page-heading">
-            <h1>Edit Post</h1>
+            <h1>Add New Post</h1>
 
           </div>
         </div>
@@ -24,24 +24,43 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <form action="/post" method="POST">
+        <form action="/posts/<%= selectPost._id %>?_method=PUT" method="POST">
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label>Post Title</label>
-              <input type="text" class="form-control" placeholder="Post Title *"  name="title" id="title" required data-validation-required-message="Please enter your name.">
+              <input 
+                type="text" 
+                class="form-control" 
+                placeholder="Post Title *" 
+                name="title" 
+                id="title" 
+                value="<%= selectPost.title %>"
+                required data-validation-required-message="Please enter your name."
+              >
               <p class="help-block text-danger"></p>
             </div>
           </div>
           <div class="control-group">
             <div class="form-group floating-label-form-group controls">
               <label>Post Detail</label>
-              <textarea rows="5" class="form-control" placeholder="Post Detail *" name="detail" id="detail" required data-validation-required-message="Please enter a message."></textarea>
+              <textarea 
+                rows="5" 
+                class="form-control" 
+                placeholder="Post Detail *" 
+                name="detail" 
+                id="detail" 
+                required data-validation-required-message="Please enter a message."
+              >
+                <%= selectPost.detail %>
+              </textarea>
               <p class="help-block text-danger"></p>
             </div>
           </div>
           <br>
           <div id="success"></div>
-          <button type="submit" class="btn btn-primary" id="sendMessageButton">Send</button>
+          <a href="/posts/<%= selectPost._id %>?_method=PUT">
+            <button type="submit" class="btn btn-primary" id="sendMessageButton">Update</button>
+          </a>
         </form>
       </div>
     </div>
