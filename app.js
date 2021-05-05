@@ -1,6 +1,14 @@
 const express = require('express')
 const ejs = require('ejs')
+const mongoose = require('mongoose')
+const Photo = require('./models/Post')
+const Post = require('./models/Post')
 const app = express()
+
+mongoose.connect('mongodb://localhost/cleanblog-test-db', {
+    useNewUrlParser: true, useUnifiedTopology: true
+})
+
 
 
 // TEMPLATE ENGİNE
@@ -9,8 +17,19 @@ app.set('view engine', 'ejs')
 // MIDDLEWARE's
 app.use(express.static('public'))
 
-app.get('/', (req, res) => {
-    res.render('index')
+// URL JSON BODY PARSER
+app.use(express.urlencoded({extended : true}))
+app.use(express.json())
+
+// ROUTE's GET
+app.get('/', async (req, res) => {
+    const posts = await Post.find({}, (err, data) => {
+        if (err) throw err
+        return data
+    })
+    res.render('index', {
+        posts
+    })
 })
 
 app.get('/about', (req, res) => {
@@ -23,6 +42,12 @@ app.get('/add-post', (req, res) => {
 
 app.get('/post', (req, res) => {
     res.render('post')
+})
+
+// ROUTE's POST
+app.post('/post', async (req, res) => {
+    await Post.create(req.body)
+    res.redirect('/')
 })
 
 const port = 5000;
