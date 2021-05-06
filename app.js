@@ -4,13 +4,18 @@ const mongoose = require('mongoose')
 const methodOverride = require('method-override')
 const postController = require('./controllers/postControllers')
 const pageController = require('./controllers/pageController')
+require('dotenv').config();
 
 const app = express()
 
-mongoose.connect('mongodb://localhost/cleanblog-test-db', {
+mongoose.connect(process.env.DATABASE_URL, {
     useNewUrlParser: true, 
     useUnifiedTopology: true,
     useFindAndModify : false
+}).then(() => {
+    console.log('DB CONNECTED!')
+}).catch((err) => {
+    console.log(err)
 })
 
 
@@ -44,7 +49,7 @@ app.get('/post/edit/:id', pageController.getEditPost)
 
 
 
-const port = 5000;
+const port = process.env.PORT || process.env.CURRENT_PORT;
 
 app.listen(port, () => {
     console.log(`Sunucu http://localhost:${port}/ adresinde başlatıldı`)
